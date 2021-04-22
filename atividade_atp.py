@@ -1,7 +1,6 @@
 from datetime import date
 from time import sleep
 
-
 print()
 nome_completo = "Matheus Angelicio"
 primeiro_nome = "Matheus"
@@ -21,11 +20,11 @@ def obterLimite():
     ano_nasc = int(input('Informe o ano de nascimento: '))
 
     print()
-    print("-=" *8 + " PROCESSANDO " + "-=" *8)
+    print("-=" * 8 + " PROCESSANDO " + "-=" * 8)
     sleep(1)
     print()
 
-    print('Seu cargo é: {}' .format(cargo))
+    print('Seu cargo é: {}'.format(cargo))
     print('Seu salario e: {}'.format(salario))
     print('Seu ano de nascimento é: {}'.format(ano_nasc))
 
@@ -33,7 +32,7 @@ def obterLimite():
     idade = ano_atual - ano_nasc
     gasto_limite = salario * (idade / 1000) + 100  # calculado da seguinte forma: [salário x (idade / 1.000)] + 100.
 
-    print('Sua idade é: {} '.format(idade) )
+    print('Sua idade é: {} '.format(idade))
     print('Você podera gastar na minha loja: RS{:.2f} '.format(gasto_limite))
     print()
 
@@ -43,7 +42,6 @@ def obterLimite():
 
 
 def verificaStatus(credito):
-
     porcento_sessenta = gasto_limite_global * 0.6
     porcento_noventa = gasto_limite_global * 0.9
     porcento_cem = gasto_limite_global * 1
@@ -54,7 +52,7 @@ def verificaStatus(credito):
     elif porcento_sessenta <= credito and credito <= porcento_noventa:
         print("Liberado ao parcelar em até 2 vezes.")
 
-    elif credito >= porcento_noventa and credito <= porcento_cem :
+    elif credito >= porcento_noventa and credito <= porcento_cem:
         print("Liberado ao parcelar em até 3 vezes.")
 
     else:
@@ -62,7 +60,6 @@ def verificaStatus(credito):
 
 
 def verificaDesconto(v_produto):
-
     nome_completo_sem_espaco = nome_completo.replace(" ", "")
     quantidade_caractere_nome_completo = len(nome_completo_sem_espaco)
 
@@ -75,6 +72,14 @@ def verificaDesconto(v_produto):
         print("Seu produto com desconto ficará {:.2f}".format(valor_produto_desconto))
         global valor_prod_desconto
         valor_prod_desconto = valor_produto_desconto
+
+
+def obterValidarValor():
+    v_produto = float(input("Qual o valor : "))
+    if v_produto <= 0:
+        print("Digite um valor valido")
+        return obterValidarValor()
+    return v_produto
 
 
 def cadastroProdutos():
@@ -92,8 +97,9 @@ def cadastroProdutos():
         global valor_prod_desconto
 
         input("Qual o {}º produto que deseja comprar? : ".format(contador))
-        v_produto = float(input("Qual o valor : "))
+        v_produto = obterValidarValor()
         verificaDesconto(v_produto)
+
         # Se o valor de valor_prod_deconto for diferente te 0, eu pego esse valor e substituo pelo valor de v_produto
         if valor_prod_desconto != 0:
             v_produto = valor_prod_desconto
@@ -113,7 +119,7 @@ def cadastroProdutos():
         else:
             print("Você ainda pode gastar RS{}".format(credito))
 
-        print("-=" *22)
+        print("-=" * 22)
         print()
 
     print()
