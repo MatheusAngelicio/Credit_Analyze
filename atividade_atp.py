@@ -116,6 +116,9 @@ def cadastroProdutos():
         print("-=" *22)
         print()
 
+    print()
+    print("Obrigado por usar minha ferramenta")
+
 
 obterLimite()
 cadastroProdutos()
