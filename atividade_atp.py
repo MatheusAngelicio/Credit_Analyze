@@ -122,6 +122,13 @@ def cadastroProdutos():
         print("-=" * 22)
         print()
 
+
+    sobra = gasto_limite_global - total_gasto
+    if sobra >= 0:
+        print("Ao final da operação você gastou RS{} e sobrou RS{} do seu dinheiro".format(total_gasto,sobra))
+    else:
+        print("Vish você não tem esse dinheiro, iremos encerrar a operação !!")
+
     print()
     print("Obrigado por usar minha ferramenta")
 
