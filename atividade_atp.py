@@ -11,7 +11,6 @@ print()
 # Denifi essas variaveis como global pois vou usar em varios lugares
 gasto_limite_global = 0
 idade_global = 0
-valor_prod_desconto = 0
 
 
 def obterLimite():
@@ -65,13 +64,19 @@ def verificaDesconto(v_produto):
 
     primeiro_nome_sem_espaco = primeiro_nome.replace(" ", "")
     quantidade_caractere_primeiro_nome = len(primeiro_nome_sem_espaco)
+    valor_prod_desconto = 0
 
     if quantidade_caractere_nome_completo <= v_produto <= idade_global:
-        valor_produto_desconto = v_produto - quantidade_caractere_primeiro_nome
+        valor_prod_desconto = v_produto - quantidade_caractere_primeiro_nome
         print("Você terá um desconto de {} reais".format(quantidade_caractere_primeiro_nome))
-        print("Seu produto com desconto ficará {:.2f}".format(valor_produto_desconto))
-        global valor_prod_desconto
-        valor_prod_desconto = valor_produto_desconto
+        print("Seu produto com desconto ficará {:.2f}".format(valor_prod_desconto))
+
+    else:
+        #Preciso zerar o valor da variavel, pq se ela receber o valor de desconto, na proxima vez que eu verificar o desconto e nao tiver
+        #desconto, tenho que mandar 0 para funcao
+        valor_prod_desconto = 0
+
+    return valor_prod_desconto
 
 
 def obterValidarValor():
@@ -82,8 +87,14 @@ def obterValidarValor():
     return v_produto
 
 
-def cadastroProdutos():
+def fimOperacao(sobra,total_gasto):
+    if sobra >= 0:
+        print("Ao final da operação você gastou RS{} e sobrou RS{} do seu dinheiro".format(total_gasto, sobra))
+    else:
+        print("Vish você não tem esse dinheiro, iremos encerrar a operação !!")
 
+
+def cadastroProdutos():
     quantidade_prod = int(input("Quantos produtos deseja cadastrar ? "))
     contador = 0
     total_gasto = 0
@@ -98,9 +109,10 @@ def cadastroProdutos():
 
         input("Qual o {}º produto que deseja comprar? : ".format(contador))
         v_produto = obterValidarValor()
-        verificaDesconto(v_produto)
 
-        # Se o valor de valor_prod_deconto for diferente te 0, eu pego esse valor e substituo pelo valor de v_produto
+        valor_prod_desconto = verificaDesconto(v_produto)
+
+        # Se o valor de valor_prod_deconto for diferente de 0, eu pego esse valor e substituo pelo valor de v_produto
         if valor_prod_desconto != 0:
             v_produto = valor_prod_desconto
 
@@ -109,9 +121,6 @@ def cadastroProdutos():
 
         credito = gasto_limite_global - total_gasto
         verificaStatus(total_gasto)
-
-        # Tenho que zerar o valor do desconto para quando entrar no prox loop nao venha com valor setado
-        valor_prod_desconto = 0
 
         if total_gasto >= gasto_limite_global:
             print("Você atingiu o limite")
@@ -122,12 +131,8 @@ def cadastroProdutos():
         print("-=" * 22)
         print()
 
-
     sobra = gasto_limite_global - total_gasto
-    if sobra >= 0:
-        print("Ao final da operação você gastou RS{} e sobrou RS{} do seu dinheiro".format(total_gasto,sobra))
-    else:
-        print("Vish você não tem esse dinheiro, iremos encerrar a operação !!")
+    fimOperacao(sobra,total_gasto)
 
     print()
     print("Obrigado por usar minha ferramenta")
