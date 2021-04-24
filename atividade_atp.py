@@ -8,10 +8,6 @@ print('Está é a loja Compre Bem, Seja bem vindo, aqui quem fala é', nome_comp
 print('Agora irei fazer uma análise de crédito, por favor digite as informaçoes que irei solicitar')
 print()
 
-# Denifi essas variaveis como global pois vou usar em varios lugares
-gasto_limite_global = 0
-idade_global = 0
-
 
 def obterLimite():
     cargo = input('Informe seu cargo: ')
@@ -35,15 +31,13 @@ def obterLimite():
     print('Você podera gastar na minha loja: RS{:.2f} '.format(gasto_limite))
     print()
 
-    global gasto_limite_global, idade_global
-    gasto_limite_global = gasto_limite
-    idade_global = idade
+    return gasto_limite, idade
 
 
-def verificaStatus(credito):
-    porcento_sessenta = gasto_limite_global * 0.6
-    porcento_noventa = gasto_limite_global * 0.9
-    porcento_cem = gasto_limite_global * 1
+def verificaStatus(credito, gasto_limite):
+    porcento_sessenta = gasto_limite * 0.6
+    porcento_noventa = gasto_limite * 0.9
+    porcento_cem = gasto_limite * 1
 
     if credito <= porcento_sessenta:
         print("Liberado")
@@ -58,7 +52,7 @@ def verificaStatus(credito):
         print("Bloqueado!")
 
 
-def verificaDesconto(v_produto):
+def verificaDesconto(v_produto, idade):
     nome_completo_sem_espaco = nome_completo.replace(" ", "")
     quantidade_caractere_nome_completo = len(nome_completo_sem_espaco)
 
@@ -66,14 +60,14 @@ def verificaDesconto(v_produto):
     quantidade_caractere_primeiro_nome = len(primeiro_nome_sem_espaco)
     valor_prod_desconto = 0
 
-    if quantidade_caractere_nome_completo <= v_produto <= idade_global:
+    if quantidade_caractere_nome_completo <= v_produto <= idade:
         valor_prod_desconto = v_produto - quantidade_caractere_primeiro_nome
         print("Você terá um desconto de {} reais".format(quantidade_caractere_primeiro_nome))
         print("Seu produto com desconto ficará {:.2f}".format(valor_prod_desconto))
 
     else:
-        #Preciso zerar o valor da variavel, pq se ela receber o valor de desconto, na proxima vez que eu verificar o desconto e nao tiver
-        #desconto, tenho que mandar 0 para funcao
+        # Preciso zerar o valor da variavel, pq se ela receber o valor de desconto, na proxima vez que eu verificar o desconto e nao tiver
+        # desconto, tenho que mandar 0 para funcao
         valor_prod_desconto = 0
 
     return valor_prod_desconto
@@ -87,30 +81,29 @@ def obterValidarValor():
     return v_produto
 
 
-def fimOperacao(sobra,total_gasto):
+def fimOperacao(sobra, total_gasto):
     if sobra >= 0:
         print("Ao final da operação você gastou RS{} e sobrou RS{} do seu dinheiro".format(total_gasto, sobra))
     else:
         print("Vish você não tem esse dinheiro, iremos encerrar a operação !!")
 
 
-def cadastroProdutos():
+def cadastroProdutos(gasto_limite, idade):
     quantidade_prod = int(input("Quantos produtos deseja cadastrar ? "))
     contador = 0
     total_gasto = 0
 
     if quantidade_prod <= 0:
         print("Digite um numero valido")
-        return cadastroProdutos()
+        return cadastroProdutos(gasto_limite,idade)
 
     while contador < quantidade_prod:
         contador = contador + 1
-        global valor_prod_desconto
 
         input("Qual o {}º produto que deseja comprar? : ".format(contador))
         v_produto = obterValidarValor()
 
-        valor_prod_desconto = verificaDesconto(v_produto)
+        valor_prod_desconto = verificaDesconto(v_produto, idade)
 
         # Se o valor de valor_prod_deconto for diferente de 0, eu pego esse valor e substituo pelo valor de v_produto
         if valor_prod_desconto != 0:
@@ -119,10 +112,10 @@ def cadastroProdutos():
         total_gasto = total_gasto + v_produto
         print("Você gastou até agora RS{}".format(total_gasto))
 
-        credito = gasto_limite_global - total_gasto
-        verificaStatus(total_gasto)
+        credito = gasto_limite - total_gasto
+        verificaStatus(total_gasto,gasto_limite)
 
-        if total_gasto >= gasto_limite_global:
+        if total_gasto >= gasto_limite:
             print("Você atingiu o limite")
             break
         else:
@@ -131,12 +124,13 @@ def cadastroProdutos():
         print("-=" * 22)
         print()
 
-    sobra = gasto_limite_global - total_gasto
-    fimOperacao(sobra,total_gasto)
+    sobra = gasto_limite - total_gasto
+    fimOperacao(sobra, total_gasto)
 
     print()
     print("Obrigado por usar minha ferramenta")
 
 
-obterLimite()
-cadastroProdutos()
+gasto_limite, idade = obterLimite()
+
+cadastroProdutos(gasto_limite, idade)
